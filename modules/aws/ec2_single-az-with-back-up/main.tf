@@ -1,14 +1,4 @@
 # --- 2. THE EC2 INSTANCE ---
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical's official AWS ID
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-*"]
-  }
-}
-
 resource "aws_instance" "cms_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
