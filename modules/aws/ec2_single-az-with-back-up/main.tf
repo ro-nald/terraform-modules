@@ -1,10 +1,10 @@
 # --- 2. THE EC2 INSTANCE ---
 resource "aws_instance" "cms_server" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = var.instance_type
-  subnet_id     = aws_subnet.public.id
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = var.instance_type
+  subnet_id              = local.vpc_id
   vpc_security_group_ids = [aws_security_group.cms_sg.id]
-  
+
   # Ensure we tag it so DLM can find it
   tags = {
     Name   = "${var.application_name}-${var.environment}"
@@ -25,7 +25,7 @@ resource "aws_dlm_lifecycle_policy" "daily_snapshots" {
 
   policy_details {
     resource_types = ["VOLUME"]
-    
+
     # DLM targets volumes based on tags
     target_tags = {
       Backup = "Daily"
@@ -33,7 +33,7 @@ resource "aws_dlm_lifecycle_policy" "daily_snapshots" {
 
     schedule {
       name = "DailySnapshots"
-      
+
       create_rule {
         interval      = 24
         interval_unit = "HOURS"
