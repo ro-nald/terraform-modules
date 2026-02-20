@@ -23,3 +23,19 @@ data "aws_availability_zones" "available" {
     values = ["availability-zone"]
   }
 }
+
+# Fetch the specified VPC (only if a VPC ID is provided)
+data "aws_vpc" "selected" {
+  count = local.create_vpc ? 0 : 1
+  id    = var.vpc_id
+}
+
+# Fetch subnets in the VPC (only if a VPC ID is provided)
+data "aws_subnets" "selected" {
+  count = local.create_vpc ? 0 : 1
+
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.selected[0].id]
+  }
+}

@@ -7,11 +7,15 @@ resource "aws_vpc" "cms_vpc" {
 
 # 2. The Internet Gateway (Allows the store to talk to the internet)
 resource "aws_internet_gateway" "igw" {
+  count  = local.create_vpc ? 1 : 0
   vpc_id = aws_vpc.cms_vpc.id
+
+  tags   = { Name = var.application_name }
 }
 
 # 3. A Public Subnet in ap-east-1a
-resource "aws_subnet" "public_a" {
+resource "aws_subnet" "public" {
+  count  = local.create_vpc ? 1 : 0
   vpc_id                  = aws_vpc.cms_vpc.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = locals.selected_az
@@ -29,7 +33,8 @@ resource "aws_route_table" "public_rt" {
 }
 
 resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.public_a.id
+  count          = local.create_vpc ? 1 : 0
+  subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public_rt.id
 }
 
