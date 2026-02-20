@@ -4,8 +4,8 @@ resource "aws_iam_role" "dlm_lifecycle" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
       Principal = { Service = "dlm.amazonaws.com" }
     }]
   })
@@ -31,8 +31,8 @@ resource "aws_iam_role_policy" "dlm_lifecycle" {
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = "ec2:CreateTags"
+        Effect   = "Allow"
+        Action   = "ec2:CreateTags"
         Resource = "arn:aws:ec2:ap-east-1::snapshot/*"
       }
     ]
