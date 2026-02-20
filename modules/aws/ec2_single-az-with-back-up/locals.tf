@@ -6,5 +6,5 @@ locals {
   vpc_id     = local.create_vpc ? aws_vpc.new_network[0].id : var.vpc_id
 
   # If a VPC ID is provided, fetch its subnets. Otherwise, use the new subnets.
-  subnet_ids = local.create_vpc ? [for s in aws_subnet.new_network : s.id] : data.aws_subnets.selected[0].ids
+  subnet_ids = local.create_vpc ? [for s in aws_subnet.new_network : s.id] : data.aws_subnets.provided[0].ids
 }

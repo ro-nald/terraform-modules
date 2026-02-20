@@ -14,7 +14,7 @@ data "aws_availability_zones" "available" {
 
   filter {
     name   = "opt-in-status"
-    values = ["opt-in-not-required"] 
+    values = ["opt-in-not-required"]
   }
 
   # Ensure we only get standard AZs, not "Local Zones" (e.g. for low latency)
@@ -24,18 +24,17 @@ data "aws_availability_zones" "available" {
   }
 }
 
-# Fetch the specified VPC (only if a VPC ID is provided)
-data "aws_vpc" "selected" {
+
+data "aws_vpc" "provided" {
   count = local.create_vpc ? 0 : 1
   id    = var.vpc_id
 }
 
-# Fetch subnets in the VPC (only if a VPC ID is provided)
-data "aws_subnets" "selected" {
+# 1. The VPC
+data "aws_subnets" "provided" {
   count = local.create_vpc ? 0 : 1
-
   filter {
     name   = "vpc-id"
-    values = [data.aws_vpc.selected[0].id]
+    values = [data.aws_vpc.provided[0].id]
   }
 }
